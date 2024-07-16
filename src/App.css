@@ -3,3 +3,8 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+}

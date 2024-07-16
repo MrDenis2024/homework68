@@ -1,6 +1,6 @@
 import './App.css';
 import Todo from './containers/Todo/Todo';
-import Layout from './containers/Layout/Layout';
+import Layout from './components/Layout/Layout';
 
 const App = () => {
 

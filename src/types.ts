@@ -3,10 +3,8 @@ export interface Todo {
   status: boolean;
 }
 
-export interface TodoMutation {
+export interface TodoMutation extends Todo {
   id: string;
-  title: string;
-  status: boolean;
 }
 
 export interface ApiTodo {

@@ -7,12 +7,14 @@ import {toast} from 'react-toastify';
 export interface TodoState  {
   todos: TodoMutation[];
   isLoading: boolean;
+  btnLoading: boolean;
   error: boolean;
 }
 
 const initialState: TodoState = {
   todos: [],
   isLoading: false,
+  btnLoading: false,
   error: false,
 };
 
@@ -39,6 +41,10 @@ export const deleteTodo = createAsyncThunk<void, TodoMutation, {state: RootState
   await axiosApi.delete(`/todo/${todo.id}.json`);
 });
 
+export const addTodo = createAsyncThunk<void, string, {state: RootState}> ('todo/add', async (title) => {
+  await axiosApi.post('/todo.json', {title, status: false});
+});
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -55,16 +61,18 @@ export const todoSlice = createSlice({
     builder.addCase(fetchTodos.rejected, (state) => {
       state.isLoading = false;
       state.error = true;
+      toast.error('Ошибка получения данных с сервера');
     });
     builder.addCase(changeTodo.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(changeTodo.fulfilled, (state) => {
       state.isLoading = false;
-      toast.success('Задача изминила свой статус');
+      toast.success('Задача успешно изминила свой статус');
     });
     builder.addCase(changeTodo.rejected, (state) => {
       state.isLoading = false;
+      toast.error('Ошибка изменения данных');
     });
     builder.addCase(deleteTodo.pending, (state) => {
       state.isLoading = true;
@@ -75,6 +83,18 @@ export const todoSlice = createSlice({
     });
     builder.addCase(deleteTodo.rejected, (state) => {
       state.isLoading = false;
+      toast.error('Ошибка удаления данных');
+    });
+    builder.addCase(addTodo.pending, (state) => {
+      state.btnLoading = true;
+    });
+    builder.addCase(addTodo.fulfilled, (state) => {
+      state.btnLoading = false;
+      toast.success('Задача успешно добалвена');
+    });
+    builder.addCase(addTodo.rejected, (state) => {
+      state.btnLoading = false;
+      toast.error('Ошибка отправки данных');
     });
   }
 });
