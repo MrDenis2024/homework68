@@ -5,7 +5,7 @@ const Layout: React.FC<PropsWithChildren> = ({children}) => {
     <>
       <header>
         <div className="navbar navbar-expand-lg navbar-dark bg-success">
-          <div className="container-fluid container">
+          <div className="container-fluid container justify-content-center">
             <p className='navbar-brand'>Todo</p>
           </div>
         </div>

@@ -32,7 +32,11 @@ export const fetchTodos = createAsyncThunk<TodoMutation[], void, {state: RootSta
 });
 
 export const changeTodo = createAsyncThunk<void, TodoMutation, {state: RootState}> ('todo/change', async (todo) => {
-  await axiosApi.put(`/todo/${todo.id}.json`, { ...todo, status: !todo.status });
+  await axiosApi.put(`/todo/${todo.id}.json`, { title: todo.title, status: !todo.status });
+});
+
+export const deleteTodo = createAsyncThunk<void, TodoMutation, {state: RootState}> ('todo/delete', async (todo) => {
+  await axiosApi.delete(`/todo/${todo.id}.json`);
 });
 
 export const todoSlice = createSlice({
@@ -60,6 +64,16 @@ export const todoSlice = createSlice({
       toast.success('Задача изминила свой статус');
     });
     builder.addCase(changeTodo.rejected, (state) => {
+      state.isLoading = false;
+    });
+    builder.addCase(deleteTodo.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deleteTodo.fulfilled, (state) => {
+      state.isLoading = false;
+      toast.success('Задача успешно удалена');
+    });
+    builder.addCase(deleteTodo.rejected, (state) => {
       state.isLoading = false;
     });
   }

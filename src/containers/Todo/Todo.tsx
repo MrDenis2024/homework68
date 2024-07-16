@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../app/store';
 import {useEffect} from 'react';
-import {changeTodo, fetchTodos} from './todoSlice';
+import {changeTodo, deleteTodo, fetchTodos} from './todoSlice';
 import Spinner from '../Spinner/Spinner';
 import {TodoMutation} from '../../types';
 
@@ -20,6 +20,11 @@ const Todo = () => {
     await dispatch(fetchTodos());
   };
 
+  const handleDeleteTodo = async (todo: TodoMutation) => {
+    await dispatch(deleteTodo(todo));
+    await dispatch(fetchTodos());
+  };
+
   return (
     <div className='mt-5'>
       {todoValue.isLoading ? (
@@ -35,7 +40,7 @@ const Todo = () => {
                 <p className='m-0' >Task: '{todo.title}'</p>
                 <div>
                   <input type="checkbox" className='me-5 border-black' checked={todo.status} onChange={() => handelChangeTodo(todo)}/>
-                  <button className='btn btn-danger'>Delete</button>
+                  <button className='btn btn-danger' onClick={() => handleDeleteTodo(todo)}>Delete</button>
                 </div>
               </div>
             ))}
@@ -47,7 +52,7 @@ const Todo = () => {
                 <p className='m-0'>Task: '{todo.title}'</p>
                 <div>
                   <input type="checkbox" checked={todo.status} className='me-5 border-black' onChange={() => handelChangeTodo(todo)}/>
-                  <button className='btn btn-danger'>Delete</button>
+                  <button className='btn btn-danger' onClick={() => handleDeleteTodo(todo)}>Delete</button>
                 </div>
               </div>
             ))}
