@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {ApiTodo, TodoMutation} from '../../types';
 import axiosApi from '../../axiosApi';
 import {RootState} from '../../app/store';
+import {toast} from 'react-toastify';
 
 export interface TodoState  {
   todos: TodoMutation[];
@@ -30,6 +31,10 @@ export const fetchTodos = createAsyncThunk<TodoMutation[], void, {state: RootSta
   return todos;
 });
 
+export const changeTodo = createAsyncThunk<void, TodoMutation, {state: RootState}> ('todo/change', async (todo) => {
+  await axiosApi.put(`/todo/${todo.id}.json`, { ...todo, status: !todo.status });
+});
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -46,6 +51,16 @@ export const todoSlice = createSlice({
     builder.addCase(fetchTodos.rejected, (state) => {
       state.isLoading = false;
       state.error = true;
+    });
+    builder.addCase(changeTodo.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(changeTodo.fulfilled, (state) => {
+      state.isLoading = false;
+      toast.success('Задача изминила свой статус');
+    });
+    builder.addCase(changeTodo.rejected, (state) => {
+      state.isLoading = false;
     });
   }
 });
